@@ -1,12 +1,5 @@
 import React from 'react';
 
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
-
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,17 +7,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 
-import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-    marginTop: theme.spacing(3),
-    overflowX: 'auto',
-  },
-  table: {
-    minWidth: 650,
-  },
   list: {
     width: '100%',
     maxWidth: 360,
@@ -53,55 +38,37 @@ const todoItems = [
 function App() {
   const classes = useStyles();
 
+  const [checked, setChecked] = React.useState(todoItems.filter(v => v.status === 'Complete').map(x => x.id));
+
+  const handleToggle = value => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+
+    setChecked(newChecked);
+  };
+
   return (
-    <div className="App">
-      <Paper className={classes.root}>
-        <Table className={classes.table}>
-          <TodoHeader />
-          <TableBody>
-            {todoItems.map((item) => <TodoRow item={item} />)}
-          </TableBody>
-        </Table>
-      </Paper>
-
-      <Divider />
-
+    <Grid container direction="column" alignItems="center" justify="center">
       <List className={classes.list}>
-        {todoItems.map((item) => <TodoListItem item={item} />)}
+        {todoItems.map(item => {
+          return (
+            <ListItem key={item.id} role={undefined} dense button onClick={handleToggle(item.id)}>
+              <ListItemIcon>
+                <Checkbox edge="start" checked={checked.indexOf(item.id) !== -1} tabIndex={-1} disableRipple />
+              </ListItemIcon>
+              <ListItemText primary={item.description} />
+            </ListItem>
+          )})
+        }
       </List>
-    </div>
+    </Grid>
   );
 }
-
-const TodoHeader = () => {
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell>Status</TableCell>
-        <TableCell>Description</TableCell>
-      </TableRow>
-    </TableHead>
-  )
-};
-
-const TodoRow = (props) => {
-  return (
-    <TableRow>
-      <TableCell>{props.item.status}</TableCell>
-      <TableCell>{props.item.description}</TableCell>
-    </TableRow>
-  )
-};
-
-const TodoListItem = (props) => {
-  return (
-    <ListItem key={props.item.id} role={undefined} dense button >
-      <ListItemIcon>
-        <Checkbox edge="start" checked={props.item.status === 'Complete'} tabIndex={-1} disableRipple />
-      </ListItemIcon>
-      <ListItemText primary={props.item.description} />
-    </ListItem>
-  )
-};
 
 export default App;
