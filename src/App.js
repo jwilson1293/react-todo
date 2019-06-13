@@ -9,6 +9,8 @@ import Checkbox from '@material-ui/core/Checkbox';
 
 import Grid from '@material-ui/core/Grid';
 
+import ItemAdder from './itemAdder';
+
 const useStyles = makeStyles(theme => ({
   list: {
     width: '100%',
@@ -46,6 +48,12 @@ function App() {
     setItems(newItems);
   };
 
+  const handleAdd = desc => () => {
+    let newItems = [...items];
+    newItems.push({description: desc, complete: false, id: items.length + 1});
+    setItems(newItems);
+  }
+
   return (
     <Grid container direction="column" alignItems="center" justify="center">
       <List className={classes.list}>
@@ -60,6 +68,7 @@ function App() {
           )})
         }
       </List>
+      <ItemAdder handleAdd={handleAdd} />
     </Grid>
   );
 }
