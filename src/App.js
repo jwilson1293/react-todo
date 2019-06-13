@@ -21,46 +21,39 @@ const todoItems = [
   {
     id: 1,
     description: 'Find a ship',
-    status: 'Complete'
+    complete: true
   },
   {
     id: 2,
     description: 'Find a crew',
-    status: 'Incomplete'
+    complete: false
   },
   {
     id: 3,
     description: 'Hunt the raven',
-    status: 'Incomplete'
+    complete: false
   }
 ];
 
 function App() {
   const classes = useStyles();
 
-  const [checked, setChecked] = React.useState(todoItems.filter(v => v.status === 'Complete').map(x => x.id));
+  let [items, setItems] = React.useState([...todoItems]);
 
   const handleToggle = value => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
+    let newItems = [...items];
+    newItems[value].complete = !newItems[value].complete;
+    setItems(newItems);
   };
 
   return (
     <Grid container direction="column" alignItems="center" justify="center">
       <List className={classes.list}>
-        {todoItems.map(item => {
+        {items.map((item, idx) => {
           return (
-            <ListItem key={item.id} role={undefined} dense button onClick={handleToggle(item.id)}>
+            <ListItem key={idx} role={undefined} dense button onClick={handleToggle(idx)}>
               <ListItemIcon>
-                <Checkbox edge="start" checked={checked.indexOf(item.id) !== -1} tabIndex={-1} disableRipple />
+                <Checkbox edge="start" checked={item.complete} tabIndex={-1} disableRipple />
               </ListItemIcon>
               <ListItemText primary={item.description} />
             </ListItem>
