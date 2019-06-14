@@ -13,7 +13,7 @@ function TodoItem(props) {
             <ListItemIcon>
                 <Checkbox edge="start" checked={props.item.complete} tabIndex={-1} disableRipple onClick={props.handleToggle(props.idx)} />
             </ListItemIcon>
-            <ListItemText primary={props.item.description} />
+            <ListItemText primary={props.item.title} />
             <IconButton className={props.classes.margin} onClick={props.handleRemove(props.idx)} >
                 <DeleteIcon />
             </IconButton>

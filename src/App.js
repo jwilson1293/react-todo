@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import $ from 'jquery';
 
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
@@ -15,28 +16,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const todoItems = [
-  {
-    id: 1,
-    description: 'Find a ship',
-    complete: true
-  },
-  {
-    id: 2,
-    description: 'Find a crew',
-    complete: false
-  },
-  {
-    id: 3,
-    description: 'Hunt the raven',
-    complete: false
-  }
-];
-
 function App() {
   const classes = useStyles();
 
-  let [items, setItems] = React.useState([...todoItems]);
+  let [items, setItems] = useState([]);
+
+  useEffect(() => {
+    $.ajax('https://jsonplaceholder.typicode.com/todos').then(response => {
+      let newItems = [];
+      response.forEach(item => newItems.push(item));
+      setItems(newItems);
+    })
+  }, []);
 
   const handleToggle = value => () => {
     let newItems = [...items];
@@ -46,7 +37,7 @@ function App() {
 
   const handleAdd = desc => () => {
     let newItems = [...items];
-    newItems.push({description: desc, complete: false, id: items.length + 1});
+    newItems.push({title: desc, complete: false, id: items.length + 1});
     setItems(newItems);
   }
 
@@ -58,6 +49,7 @@ function App() {
 
   return (
     <Grid container direction="column" alignItems="center" justify="center">
+      <ItemAdder handleAdd={handleAdd} />
       <List className={classes.list}>
         {items.map((item, idx) => {
           return (
@@ -72,7 +64,6 @@ function App() {
           )})
         }
       </List>
-      <ItemAdder handleAdd={handleAdd} />
     </Grid>
   );
 }
