@@ -23,9 +23,7 @@ function App() {
 
   useEffect(() => {
     $.ajax('https://jsonplaceholder.typicode.com/todos').then(response => {
-      let newItems = [];
-      response.forEach(item => newItems.push(item));
-      setItems(newItems);
+      setItems(response);
     })
   }, []);
 
@@ -54,6 +52,7 @@ function App() {
         {items.map((item, idx) => {
           return (
             <TodoItem
+              key={idx}
               item={item}
               idx={idx}
               handleRemove={handleRemove}
